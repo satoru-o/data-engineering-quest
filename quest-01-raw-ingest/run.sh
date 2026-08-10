@@ -13,4 +13,10 @@ if [ $# -eq 0 ]; then
   set -- python /work/ingest.py
 fi
 
-docker compose exec -T tools "$@"
+# 端末から呼ばれたときはTTYを渡す。breakpoint() でデバッガに落ちて
+# その場の変数を触れるようにするため
+if [ -t 0 ]; then
+  docker compose exec tools "$@"
+else
+  docker compose exec -T tools "$@"
+fi

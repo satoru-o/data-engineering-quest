@@ -112,6 +112,10 @@ cat spec/orders.md     # 仕様を読む
 | 02 | [パイプラインの形 — 境界をどこに引くか](docs/02-pipeline-shapes.md) | 書けた |
 | 03 | [データは汚い — 取り込み層が引き受けるもの](docs/03-dirty-data.md) | 書けた |
 | 04 | [冪等性とリプレイ — 二度流しても壊れない](docs/04-idempotency-and-replay.md) | 書けた |
+| 付録 | [「やりたいことが書けない」を抜ける](docs/appendix-how-to-write-it.md) | 書けた |
+
+付録だけは概念の話ではなく、手の動かし方と調べ方。
+やることは分かっているのにコードにならない、というときに読む。
 
 残りは [docs/README.md](docs/README.md) の一覧を参照。
 

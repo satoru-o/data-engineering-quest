@@ -45,11 +45,36 @@ pandasでもDuckDBのSQLでも、Parquetが仕様どおりに出れば何で書�
 > `setup.sh` は既にあるファイルを上書きしないので、何度叩いても書きかけは消えない。
 > 雛形からやり直したいときは `cp skeleton/ingest.py work/ingest.py`。
 
-対話的にいじりたいときはコンテナに入る。
+> [!TIP]
+> **いきなり `ingest.py` を書き始めないこと。** `./repl.sh` で1行ずつ試して、
+> 動いた行だけを写していくのが速い。手が止まるなら
+> [付録: 「やりたいことが書けない」を抜ける](../docs/appendix-how-to-write-it.md) を読む。
+
+### 対話的に試す
 
 ```bash
-./shell.sh
+./repl.sh
 ```
+
+IPythonが立ち上がる。`pd` / `pa` / `pq` / `duckdb` / `unicodedata` が読み込み済みで、
+`FILES` に生データのパスが入っている。
+
+```python
+In [1]: df = pd.read_csv(FILES[0], dtype=str, keep_default_na=False)
+In [2]: sorted(df["quantity"].unique())      # 列の値を全部並べる。これが一番効く
+In [3]: [m for m in dir(df) if "dup" in m]   # メソッド名を思い出せないとき
+In [4]: df.drop_duplicates?                  # その場でドキュメント
+```
+
+書き途中のコードの真ん中で止めることもできる。
+
+```python
+def clean(df):
+    df = df.map(norm)
+    breakpoint()      # ./run.sh するとここで止まり、その場の df を触れる
+```
+
+シェルが要るときは `./shell.sh`。
 
 | コンテナの中 | |
 | --- | --- |
