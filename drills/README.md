@@ -23,14 +23,32 @@ http://localhost:8888/lab が開く。左のファイルブラウザからノー
 | --- | --- |
 | `notebooks/` | 配布用のノートブック。git管理 |
 | `work/` | **自分がいじるほう。git管理外** |
-| `data/` | 12行のCSVが3つ。全部目で見られる大きさ |
+| `data/` | 小さなCSVが5つ。全部目で見られる大きさ |
 
 `start.sh` が `notebooks/` の中身を `work/` に配る。
 **既にあるファイルは上書きしない**ので、書きかけが消えることはない。
 
+## どこから読むか
+
+**pandas を触ったことがないなら `pandas-00` から。**
+「pandas でやることは結局この10個」を、SQL の `SELECT` 文と対応づけて一通り見る。
+引っかけは無く、素直な説明だけ。
+
+10個が手に馴染んだら `pandas-01` 以降へ。ここからは
+**引数ひとつで結果が変わるところ**を A/B で並べる形式になる。
+
+```
+pandas-00  基本の10個            ← 素直な説明
+   ↓
+pandas-01  読み込みと型          ← ここから A/B で比較する形式
+pandas-02  選ぶ・絞る・変える
+pandas-03  集約・重複・並べ替え
+sql-01     NULL・JOIN・窓関数
+```
+
 ## 進め方
 
-各節はこの形になっている。
+`pandas-01` 以降の各節はこの形になっている。
 
 ```
 ### 2-1. keep_default_na
@@ -51,6 +69,7 @@ http://localhost:8888/lab が開く。左のファイルブラウザからノー
 
 | | テーマ | 主な内容 | |
 | --- | --- | --- | --- |
+| **pandas-00** | **基本はこの10個** | DataFrame と Series / 読む・見る / `SELECT` `WHERE` `ORDER BY` `GROUP BY` `JOIN` `UNION` `DISTINCT` に対応する10個 / メソッドチェーン | できた |
 | pandas-01 | 読み込みと型 | `dtype` / `keep_default_na` / `na_values` / `thousands` / `astype` vs `to_numeric` / `int64` vs `Int64` / `to_datetime(format=)` / `.dt.date` / `NaN` の比較 | できた |
 | pandas-02 | 選ぶ・絞る・変える | `[]` vs `[[]]` / `.loc` vs `.iloc` / `&` と括弧 / `isin` `between` `query` / 連鎖indexing / `assign` / `map` vs `apply` vs `.str` / `where` vs `mask` / `replace` vs `str.replace` | できた |
 | pandas-03 | 集約・重複・並べ替え | `as_index` / `dropna` / `size` vs `count` / named agg / `transform` / **`.last()` の罠** / `drop_duplicates` / `duplicated(keep=)` / `na_position` / `rank(method=)` | できた |
@@ -71,12 +90,17 @@ http://localhost:8888/lab が開く。左のファイルブラウザからノー
 
 ## データ
 
-3ファイル、合計23行。すべて `data/` にあり、直接読める。
+5ファイル、合計38行。すべて `data/` にあり、直接読める。
 
 ```
-orders.csv     12行   注文。欠損・カンマ区切り・大文字混在を少しずつ含む
-customers.csv   5行   顧客。1人は注文が無い
-payments.csv    5行   支払い。1つの注文に2件、存在しない注文に1件
+pandas-00 用 (きれい。汚れの話を混ぜない)
+  sales.csv     12行   売上。3店舗 x 3商品
+  shops.csv      4行   店。1店は売上が無い (JOIN の説明用)
+
+pandas-01 以降 (汚れを少しずつ含む)
+  orders.csv    12行   注文。欠損・カンマ区切り・大文字混在
+  customers.csv  5行   顧客。1人は注文が無い
+  payments.csv   5行   支払い。1つの注文に2件、存在しない注文に1件
 ```
 
 **小さいので全部目で見られる。** 集計結果が合っているかを手で数えて確かめられる、
