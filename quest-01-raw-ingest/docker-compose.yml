@@ -1,0 +1,25 @@
+services:
+  # 生データを作り、出力を10秒ごとに検証する見張り役。
+  # /truth はコンテナの中だけにあり、ホストからは見えない
+  checker:
+    build: ./image
+    image: dequest01
+    container_name: dequest01-checker
+    user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
+    command: ["sh", "-c", "python /app/gen.py && python /app/check.py"]
+    volumes:
+      - ./data:/data
+      - ./out:/out
+
+  # 作業用。ここで ingest.py を動かす
+  tools:
+    build: ./image
+    image: dequest01
+    container_name: dequest01-tools
+    user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
+    command: ["sleep", "infinity"]
+    working_dir: /work
+    volumes:
+      - ./data:/data:ro
+      - ./out:/out
+      - ./work:/work
