@@ -270,6 +270,18 @@ print(t.slice(0, 5).to_pandas())
 "
 ```
 
+## 参考解答
+
+詰まりきったとき用に `solution/ingest.py` を置いてある。**ネタバレ。**
+
+```bash
+./run.sh python /solution/ingest.py    # 動かして確かめる
+```
+
+`spec/orders.md` の処理1〜6に1ブロックずつ対応させて、
+「なぜそう書くか」をコメントにしてある。読んだら `work/ingest.py` で書き直すこと。
+写経しただけだと、次のクエストで同じところで止まる。
+
 ## 後片付け
 
 ```bash

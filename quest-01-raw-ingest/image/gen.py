@@ -34,11 +34,13 @@ STATUSES = ["completed", "cancelled", "pending"]
 NULLISH = ["NULL", "N/A", "-", ""]
 UNIT_PRICES = [300, 480, 780, 980, 1200, 1980, 2480, 3200, 4800, 9800]
 
-N_ORDERS = 1200
-N_DUPLICATED = 90      # 後から正しい値が届く注文
-N_SUPERSEDED = 15      # 後から届いた行が不正で、除外されるべき注文
-N_BROKEN = 40          # 1行しか無く、その行が不正な注文
-N_NULL_NAME = 20       # 顧客名が欠損表現になっている注文
+# 件数は実行ごとに振り直す。固定にすると正解の行数が毎回同じになり、
+# 前回の答えや他人の答えが当てになってしまう
+RANGE_ORDERS = (1050, 1400)
+RANGE_DUPLICATED = (70, 110)    # 後から正しい値が届く注文
+RANGE_SUPERSEDED = (10, 25)     # 後から届いた行が不正で、除外されるべき注文
+RANGE_BROKEN = (25, 55)         # 1行しか無く、その行が不正な注文
+RANGE_NULL_NAME = (10, 30)      # 顧客名が欠損表現になっている注文
 
 RAW_COLUMNS = ["order_id", "order_date", "customer_name", "region",
                "status", "quantity", "amount", "ingested_at"]
@@ -141,8 +143,14 @@ def main():
     rng = random.Random(secrets.randbits(64))
     base_ingest = datetime.datetime(2024, 2, 1, 2, 0, 0)
 
+    n_orders = rng.randint(*RANGE_ORDERS)
+    n_duplicated = rng.randint(*RANGE_DUPLICATED)
+    n_superseded = rng.randint(*RANGE_SUPERSEDED)
+    n_broken = rng.randint(*RANGE_BROKEN)
+    n_null_name = rng.randint(*RANGE_NULL_NAME)
+
     orders = []
-    for i in range(1, N_ORDERS + 1):
+    for i in range(1, n_orders + 1):
         qty = rng.randint(1, 9)
         orders.append({
             "order_id": f"ORD-{i:06d}",
@@ -156,12 +164,12 @@ def main():
             "ingested_at": base_ingest + datetime.timedelta(seconds=i),
         })
 
-    idx = list(range(N_ORDERS))
+    idx = list(range(n_orders))
     rng.shuffle(idx)
-    cut1 = N_DUPLICATED
-    cut2 = cut1 + N_SUPERSEDED
-    cut3 = cut2 + N_BROKEN
-    cut4 = cut3 + N_NULL_NAME
+    cut1 = n_duplicated
+    cut2 = cut1 + n_superseded
+    cut3 = cut2 + n_broken
+    cut4 = cut3 + n_null_name
     duplicated = set(idx[:cut1])
     superseded = set(idx[cut1:cut2])
     broken = set(idx[cut2:cut3])
@@ -266,7 +274,7 @@ def main():
                    f"{TRUTH}/expected.parquet")
 
     print(f"[gen] 生データを {DATA} に生成しました "
-          f"(注文 {N_ORDERS} 件 / 正解 {len(expected)} 行)")
+          f"(注文 {n_orders} 件 / 正解 {len(expected)} 行)")
 
 
 if __name__ == "__main__":
