@@ -10,6 +10,7 @@
 
 ```
 docs/          基礎論。概念だけの読み物。クエストから参照される
+drills/        SQLとpandasの基礎ドリル。Jupyterで動かす準備運動
 quest-NN-*/    手を動かすクエスト。docker compose で完結する
 ```
 
@@ -47,6 +48,15 @@ quest-NN-*/
 
 ## 遊び方
 
+コードを書くこと自体に慣れていないなら、まず [drills/](drills/) から。
+SQL と pandas で「知らないと黙って間違う」ところを、12行のデータで一つずつ潰す。
+
+```bash
+cd drills && ./start.sh      # http://localhost:8888/lab
+```
+
+クエストはこう。
+
 ```bash
 cd quest-01-raw-ingest
 cat README.md          # ミッション確認
@@ -60,6 +70,19 @@ cat spec/orders.md     # 仕様を読む
 ```
 
 ヒントは各READMEの中で段階的に公開してあるので、まずヒント無しで格闘してから読むのがおすすめ。
+
+## 収録ドリル
+
+クエストの前の準備運動。ノートブックで、**引数ひとつで結果が変わるところ**を潰す。
+詳しくは [drills/README.md](drills/README.md)。
+
+| | テーマ | |
+| --- | --- | --- |
+| pandas-01 | 読み込みと型 | できた |
+| pandas-02 | 選ぶ・絞る・変える | できた |
+| pandas-03 | 集約・重複・並べ替え | できた |
+| sql-01 | NULL・JOIN・窓関数 | できた |
+| pandas-04 / sql-02 / pandas-05 | 結合と連結 / 集約と日付 / 時系列 | これから |
 
 ## 収録クエスト
 

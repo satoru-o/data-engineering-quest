@@ -1,9 +1,12 @@
 # 各クエストの作業ディレクトリ。自分の書いた答えはコミットしない。
 # 雛形は quest-*/skeleton/ にあり、setup.sh が work/ に配る
 quest-*/work/
+drills/work/
 
 # 実行のたびに作り直されるもの
 quest-*/data/
 quest-*/out/
 quest-*/.env
 quest-*/.state
+
+drills/.env
