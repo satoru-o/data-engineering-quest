@@ -10,3 +10,6 @@ quest-*/.env
 quest-*/.state
 
 drills/.env
+
+# Claude Code
+.claude/
