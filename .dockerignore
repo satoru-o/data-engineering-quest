@@ -1,0 +1,18 @@
+# ビルドコンテキストはリポジトリルート。イメージに要るのは
+# pyproject.toml / uv.lock / .python-version と quest-01 のスクリプトだけなので、
+# 残りは送らない。とくに work/ は学習者が書き換えるたびに変わる
+.git/
+.venv/
+__pycache__/
+.claude/
+
+**/work/
+**/out/
+**/notebooks/
+**/data/
+**/.ipynb_checkpoints/
+**/.env
+
+docs/
+archive/
+**/*.md

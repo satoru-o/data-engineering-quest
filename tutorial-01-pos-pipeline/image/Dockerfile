@@ -1,11 +1,28 @@
 FROM python:3.12-slim
 
-RUN pip install --no-cache-dir \
-      pandas==2.2.3 \
-      pyarrow==18.1.0 \
-      duckdb==1.1.3 \
-      numpy==2.2.1 \
-      jupyterlab==4.3.4
+# 依存はリポジトリルートの pyproject.toml と uv.lock で決まる。
+# ここに教材のバージョンは書かない。
+#
+# uv は PyPI から入れる。ghcr.io の公式イメージから COPY するほうが速いが、
+# レジストリを2つに増やすとどちらかが落ちただけでビルドできなくなる。
+# 依存パッケージと同じ経路だけで済ませる
+RUN pip install --no-cache-dir uv==0.12.3
+
+ENV UV_LINK_MODE=copy \
+    UV_COMPILE_BYTECODE=1 \
+    UV_PYTHON_DOWNLOADS=never \
+    UV_PROJECT_ENVIRONMENT=/opt/venv
+
+WORKDIR /repo
+# uv.lock はワークスペース全体を覆うので、全メンバーの pyproject.toml が要る
+COPY pyproject.toml uv.lock .python-version ./
+COPY drills/pyproject.toml drills/
+COPY tutorial-01-pos-pipeline/pyproject.toml tutorial-01-pos-pipeline/
+COPY quest-01-raw-ingest/pyproject.toml quest-01-raw-ingest/
+
+RUN uv sync --frozen --no-dev --package dequest-tutorial01
+
+ENV PATH="/opt/venv/bin:$PATH"
 
 # 非rootのuidで動く。passwdに載っていないのでHOMEが / になり、
 # Jupyterが設定や実行時ファイルを書けずに落ちる

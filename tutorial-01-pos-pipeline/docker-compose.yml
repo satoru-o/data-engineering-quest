@@ -1,6 +1,9 @@
 services:
   lab:
-    build: ./image
+    # 依存は uv.lock で決まる。ビルドコンテキストはリポジトリルート
+    build:
+      context: ..
+      dockerfile: tutorial-01-pos-pipeline/image/Dockerfile
     image: dequest-tutorial01
     container_name: dequest-tutorial01
     user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
