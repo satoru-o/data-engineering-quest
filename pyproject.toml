@@ -1,0 +1,9 @@
+# 依存関係の単一の情報源。
+# 教材ごとに要るものが少し違うので uv workspace で分けてある。
+# ロックファイル (uv.lock) はここに1つだけ置き、全メンバー分をまとめて固定する。
+[tool.uv.workspace]
+members = [
+    "drills",
+    "tutorial-01-pos-pipeline",
+    "quest-01-raw-ingest",
+]

@@ -13,5 +13,9 @@ quest-*/.state
 drills/.env
 tutorial-*/.env
 
+# uv が作る仮想環境。uv.lock はコミットする (依存を固定するのが目的なので)
+.venv/
+__pycache__/
+
 # Claude Code
 .claude/

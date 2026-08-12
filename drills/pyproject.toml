@@ -1,0 +1,18 @@
+[project]
+name = "dequest-drills"
+version = "0"
+requires-python = "==3.12.*"
+
+# バージョンは固定する。ドリルは pandas の挙動そのもの (groupby().last() の罠など)
+# を教材にしているので、動くと問題が成立しなくなる
+dependencies = [
+    "pandas==2.2.3",
+    "pyarrow==18.1.0",
+    "duckdb==1.1.3",
+    "numpy==2.2.1",
+    "jupyterlab==4.3.4",
+]
+
+[tool.uv]
+# 依存の入れ物であって、配布するパッケージではない
+package = false

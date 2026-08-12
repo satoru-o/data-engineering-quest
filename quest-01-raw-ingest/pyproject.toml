@@ -1,0 +1,15 @@
+[project]
+name = "dequest-quest01"
+version = "0"
+requires-python = "==3.12.*"
+
+# ノートブックは使わない。breakpoint() で落ちる先として ipython だけ入れる
+dependencies = [
+    "pandas==2.2.3",
+    "pyarrow==18.1.0",
+    "duckdb==1.1.3",
+    "ipython==8.30.0",
+]
+
+[tool.uv]
+package = false
