@@ -229,6 +229,36 @@ cat spec/orders.md     # 仕様を読む
 
 第1部は軽めです(コンテナ2つ、メモリ1GB程度)。第3部の Kafka / Spark は数GB使います。
 
+## 依存関係
+
+**バージョンはリポジトリルートの [pyproject.toml](pyproject.toml) と [uv.lock](uv.lock) だけで決まります。**
+Dockerfile には教材のバージョンを書きません。
+
+以前は `pip install pandas==2.2.3 ...` を3つの Dockerfile に直書きしていました。
+これだと直接使うパッケージしか固定できず、その先の依存は入れ直すたびに変わります。
+ドリルは `groupby().last()` の罠のように**バージョンで変わる挙動そのもの**を教材にしているので、
+そこがずれると問題が成立しなくなります。ロックファイルはそれを防ぐためのものです。
+
+教材ごとに要るものが少し違うので、[uv](https://docs.astral.sh/uv/) の workspace で分けてあります。
+
+```
+pyproject.toml                          メンバーの一覧だけ
+uv.lock                                 全メンバー分をまとめて固定する
+drills/pyproject.toml                   + jupyterlab
+tutorial-01-pos-pipeline/pyproject.toml + jupyterlab
+quest-01-raw-ingest/pyproject.toml      + ipython (ノートブックは使わない)
+```
+
+```bash
+uv sync --package dequest-drills   # ホストに環境を作る (触りたいときだけ)
+uv add --package dequest-drills X  # 依存を足す
+uv lock                            # ロックを取り直す
+```
+
+`uv.lock` を変えたら `docker compose build` でイメージに反映されます。
+**ホスト側に uv を入れる必要はありません。**入っていなくても
+`./start.sh` はコンテナの中で `uv sync` するので、そのまま動きます。
+
 ## 素材を直接読んでもFLAGが分からない理由
 
 クエストだけの話です。ドリルとチュートリアルにFLAGはありません(答えは最初から付いています)。
