@@ -246,9 +246,16 @@ Dockerfile には教材のバージョンを書きません。
 pyproject.toml                          メンバーの一覧だけ
 uv.lock                                 全メンバー分をまとめて固定する
 drills/pyproject.toml                   + jupyterlab
-tutorial-01-pos-pipeline/pyproject.toml + jupyterlab
+tutorial-01-pos-pipeline/pyproject.toml + jupyterlab, ipykernel
 quest-01-raw-ingest/pyproject.toml      + ipython (ノートブックは使わない)
 ```
+
+`ipykernel` は `jupyterlab` の依存として勝手に入るものですが、tutorial-01 では
+**6系に留めるために明示しています。** ipykernel 7 はカーネルの内部構造が変わっており、
+VS Code の Jupyter 拡張がカーネルを ready と判定できず、セルが `pending` のまま進みません
+([microsoft/vscode-jupyter#17228](https://github.com/microsoft/vscode-jupyter/issues/17228))。
+ブラウザの JupyterLab では起きないので、気付かずに踏むと原因が分かりにくい類のものです。
+`uv.lock` は全メンバー共通なので、この固定は drills 側のイメージにも効きます。
 
 ```bash
 uv sync --package dequest-drills   # ホストに環境を作る (触りたいときだけ)

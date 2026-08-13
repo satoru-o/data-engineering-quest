@@ -9,6 +9,11 @@ dependencies = [
     "duckdb==1.1.3",
     "numpy==2.2.1",
     "jupyterlab==4.3.4",
+    # jupyterlab の推移依存で勝手に入るが、ここで明示して6系に留める。
+    # ipykernel 7 は subshell 対応でカーネルの内部構造が変わり、VS Code の
+    # Jupyter拡張がカーネルを ready と判定できずセルが pending のまま止まる
+    # (microsoft/vscode-jupyter#17228)。ブラウザのJupyterLabでは起きない
+    "ipykernel==6.31.0",
 ]
 
 [tool.uv]
