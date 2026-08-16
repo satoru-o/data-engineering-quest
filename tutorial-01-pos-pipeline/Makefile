@@ -1,7 +1,7 @@
 # tutorial-01 の操作を make で書いたもの。start.sh / stop.sh と並走している。
 # どちらを使ってもよい。make のほうは入力が変わったときだけビルドし直す。
 #
-# 普段はリポジトリのどこからでも mk tutorial で叩く (~/.bash_aliases の mk 関数)。
+# 普段はリポジトリのどこからでも mk tutorial-01 で叩く (~/.bash_aliases の mk 関数)。
 # このディレクトリで直接叩いてもよい:
 #
 #   make up       JupyterLab を起動する  (./start.sh 相当)
@@ -18,7 +18,8 @@ WORK_NB   := $(patsubst notebooks/%,work/%,$(NOTEBOOKS))
 # docker compose build の入力。1つでも新しければイメージを作り直す。
 # ビルドコンテキストがリポジトリルートなので、ルート側のファイルも入る
 BUILD_DEPS := ../pyproject.toml ../uv.lock ../.python-version \
-              ../drills/pyproject.toml ../quest-01-raw-ingest/pyproject.toml \
+              ../drills/pyproject.toml ../tutorial-02-roster-cleaning/pyproject.toml \
+              ../quest-01-raw-ingest/pyproject.toml \
               pyproject.toml image/Dockerfile docker-compose.yml
 
 # 複数行の文字列は define で持つ。export するとレシピから $$BANNER で読める
@@ -32,8 +33,8 @@ define BANNER
 
   01-ingest.ipynb から順に開いてください。
 
-  止めるとき      mk tutorial-down
-  配り直すとき    mk tutorial-reset
+  止めるとき      mk tutorial-01-down
+  配り直すとき    mk tutorial-01-reset
 --------------------------------------------------------------------
 endef
 export BANNER
