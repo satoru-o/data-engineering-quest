@@ -1,0 +1,14 @@
+services:
+  lab:
+    # 依存は uv.lock で決まる。ビルドコンテキストはリポジトリルート
+    build:
+      context: ..
+      dockerfile: tutorial-02-roster-cleaning/image/Dockerfile
+    image: dequest-tutorial02
+    container_name: dequest-tutorial02
+    user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
+    ports:
+      - "8890:8888"
+    volumes:
+      - ./work:/work        # 自分がいじるノートブック。git管理外
+      - ./data:/data:ro     # 人事システムのエクスポート (読み取り専用)
