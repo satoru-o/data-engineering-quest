@@ -38,6 +38,8 @@ docs/01,03 を読む
    ↓
 drills          pandas と SQL の書き方に慣れる
    ↓
+tutorial-02     汚れた社員名簿を直す。ノートブック1枚・15分で一周する
+   ↓
 tutorial-01     汚れたPOSログを日次サマリにするまでを、一緒に作る
    ↓
 quest-01        同じ領域を、今度は仕様書だけで自力実装する
@@ -107,6 +109,14 @@ cd tutorial-01-pos-pipeline && ./start.sh    # http://localhost:8889/lab
 
 `work/01-ingest.ipynb` を開いて、上から順に実行していきます。
 
+短いほう(tutorial-02)は `make` だけです。`start.sh` は置いていません。
+
+```bash
+mk tutorial-02                               # http://localhost:8890/lab
+```
+
+`work/01-essentials.ipynb` を開きます。**これ1枚で終わります。**
+
 ### クエスト(腕試し)
 
 ```bash
@@ -141,9 +151,31 @@ cat spec/orders.md     # 仕様を読む
 
 ## 収録チュートリアル
 
-**通しの実習です。** 1つの題材を、取り込みから出力まで最後まで運びます。
+**通しの実習です。** 1つの題材を、最後まで運びきります。
 考え方の説明 → セルを実行 → 小さい練習、の繰り返しで進みます。
-詳しくは [tutorial-01-pos-pipeline/README.md](tutorial-01-pos-pipeline/README.md) を参照してください。
+
+**2本あります。まとまった時間が取れないときは tutorial-02 から。**
+
+| | 題材 | 大きさ | 起動 |
+| --- | --- | --- | --- |
+| [tutorial-02](tutorial-02-roster-cleaning/) | 社員名簿クレンジング | ノートブック1枚・23セル・**15分** | `mk tutorial-02` |
+| [tutorial-01](tutorial-01-pos-pipeline/) | POS売上パイプライン | 5章・通しで作る | `mk tutorial-01` |
+
+### [tutorial-02 社員名簿クレンジング](tutorial-02-roster-cleaning/)
+
+**pandas のクレンジングだけを切り出したエッセンシャル版です。** ノートブック1枚で完結します。
+
+人事システムからエクスポートした名簿20行に、全角と空白、欠損表現の揺れ、
+Excel で落ちた先頭ゼロ、書式違いの日付、重複と訂正、部署名の表記ゆれが仕込んであります。
+これを部門別に集計できる16行にするまでを、6節・練習3問でやります。
+
+| 節 | やること |
+| --- | --- |
+| 1〜3 | 現物を見る → 表記と欠損を揃える(NFKC) → 型を決める(`zfill` / `to_datetime` / `Int64`) |
+| 4〜5 | 重複を落とす(事故と訂正は別物) → 名寄せして結合する(`validate="m:1"`) |
+| 6 | 使えない行を隔離して集計し、**手で数えた値と突き合わせる** |
+
+**出力(Parquet)と冪等な再実行は扱いません。** そこは tutorial-01 の担当です。
 
 ### [tutorial-01 POS売上パイプライン](tutorial-01-pos-pipeline/)
 
@@ -230,6 +262,7 @@ cat spec/orders.md     # 仕様を読む
 | --- | --- | --- |
 | drills | 8888 | JupyterLab |
 | tutorial-01 | 8889 | JupyterLab |
+| tutorial-02 | 8890 | JupyterLab |
 | quest-01 | — | ポートは使いません |
 
 第1部は軽めです(コンテナ2つ、メモリ1GB程度)。第3部の Kafka / Spark は数GB使います。
@@ -251,10 +284,12 @@ pyproject.toml                          メンバーの一覧だけ
 uv.lock                                 全メンバー分をまとめて固定する
 drills/pyproject.toml                   + jupyterlab
 tutorial-01-pos-pipeline/pyproject.toml + jupyterlab, ipykernel
+tutorial-02-roster-cleaning/pyproject.toml
+                                        + jupyterlab, ipykernel (pyarrow は要らない)
 quest-01-raw-ingest/pyproject.toml      + ipython (ノートブックは使わない)
 ```
 
-`ipykernel` は `jupyterlab` の依存として勝手に入るものですが、tutorial-01 では
+`ipykernel` は `jupyterlab` の依存として勝手に入るものですが、チュートリアルでは
 **6系に留めるために明示しています。** ipykernel 7 はカーネルの内部構造が変わっており、
 VS Code の Jupyter 拡張がカーネルを ready と判定できず、セルが `pending` のまま進みません
 ([microsoft/vscode-jupyter#17228](https://github.com/microsoft/vscode-jupyter/issues/17228))。
