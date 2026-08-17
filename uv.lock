@@ -6,6 +6,7 @@ requires-python = "==3.12.*"
 members = [
     "dequest-drills",
     "dequest-quest01",
+    "dequest-quest02",
     "dequest-tutorial01",
     "dequest-tutorial02",
 ]
@@ -283,6 +284,21 @@ dependencies = [
 requires-dist = [
     { name = "duckdb", specifier = "==1.1.3" },
     { name = "ipython", specifier = "==8.30.0" },
+    { name = "pandas", specifier = "==2.2.3" },
+    { name = "pyarrow", specifier = "==18.1.0" },
+]
+
+[[package]]
+name = "dequest-quest02"
+version = "0"
+source = { virtual = "quest-02-access-log-transform" }
+dependencies = [
+    { name = "pandas" },
+    { name = "pyarrow" },
+]
+
+[package.metadata]
+requires-dist = [
     { name = "pandas", specifier = "==2.2.3" },
     { name = "pyarrow", specifier = "==18.1.0" },
 ]

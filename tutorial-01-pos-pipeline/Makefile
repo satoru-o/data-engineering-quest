@@ -20,6 +20,7 @@ WORK_NB   := $(patsubst notebooks/%,work/%,$(NOTEBOOKS))
 BUILD_DEPS := ../pyproject.toml ../uv.lock ../.python-version \
               ../drills/pyproject.toml ../tutorial-02-roster-cleaning/pyproject.toml \
               ../quest-01-raw-ingest/pyproject.toml \
+              ../quest-02-access-log-transform/pyproject.toml \
               pyproject.toml image/Dockerfile docker-compose.yml
 
 # 複数行の文字列は define で持つ。export するとレシピから $$BANNER で読める
