@@ -3,12 +3,12 @@ name = "dequest-quest02"
 version = "0"
 requires-python = "==3.12.*"
 
-# 判定は dtype を見る。CSV に書き出すと型が文字列に潰れて判定できないので、
-# 出力は Parquet にしてある。そのために pyarrow が要る。
+# pandas だけでよい。採点は work/solve.py を runpy で実行して
+# 名前空間から答えを受け取る形なので、ファイルに書き出さない。
+# 直列化しないぶん pyarrow が要らず、dtype もそのまま見られる。
 # ノートブックは使わないクエストなので jupyterlab も ipython も入れない
 dependencies = [
     "pandas==2.2.3",
-    "pyarrow==18.1.0",
 ]
 
 [tool.uv]

@@ -31,7 +31,7 @@ SUB = $(MAKE) --no-print-directory -C
 .PHONY: help \
         tutorial-01 tutorial-01-down tutorial-01-reset tutorial-01-logs tutorial-01-shell \
         tutorial-02 tutorial-02-down tutorial-02-reset tutorial-02-logs tutorial-02-shell \
-        quest-02 quest-02-reset \
+        quest-02 quest-02-new quest-02-answer quest-02-reset \
         tutorial tutorial-down tutorial-reset tutorial-logs tutorial-shell
 
 help:               ## このヘルプを出す
@@ -67,11 +67,18 @@ tutorial-02-logs:   ## tutorial-02 のログを追う
 tutorial-02-shell:  ## tutorial-02 のコンテナに入る
 	@+$(SUB) $(TUTORIAL02) shell
 
-# quest-02 だけは Docker を使わない。ポートも上がらず、その場で採点して終わる
-quest-02:           ## quest-02 アクセスログの型そろえ を判定する
+# quest-02 だけは Docker を使わない。ポートも上がらず、その場で採点して終わる。
+# 出題は毎回ランダムなので、引き直す new と、問題を変えない reset を分けてある
+quest-02:           ## quest-02 アクセスログの下ごしらえ を採点する (初回は問題を配る)
 	@+$(SUB) $(QUEST02) check
 
-quest-02-reset:     ## quest-02 の solve.py を配り直す (自分の答えは失われる)
+quest-02-new:       ## quest-02 の問題を引き直す (SEED=1234 で同じ問題を再現できる)
+	@+$(SUB) $(QUEST02) new
+
+quest-02-answer:    ## quest-02 の今の3問の参考解答を出す
+	@+$(SUB) $(QUEST02) answer
+
+quest-02-reset:     ## quest-02 の問題はそのままで solve.py を白紙に戻す
 	@+$(SUB) $(QUEST02) reset
 
 # チュートリアルが1本だけだった頃の名前。手癖で叩けるように残してある。

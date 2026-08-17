@@ -294,14 +294,10 @@ version = "0"
 source = { virtual = "quest-02-access-log-transform" }
 dependencies = [
     { name = "pandas" },
-    { name = "pyarrow" },
 ]
 
 [package.metadata]
-requires-dist = [
-    { name = "pandas", specifier = "==2.2.3" },
-    { name = "pyarrow", specifier = "==18.1.0" },
-]
+requires-dist = [{ name = "pandas", specifier = "==2.2.3" }]
 
 [[package]]
 name = "dequest-tutorial01"

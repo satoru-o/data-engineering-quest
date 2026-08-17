@@ -261,5 +261,5 @@ df.groupby("path").agg(
 
 | | |
 |---|---|
-| [quest-02](quest-02-access-log-transform/) | 「型を直す」「文字列」 |
+| [quest-02](quest-02-access-log-transform/) | **9節すべて**。毎回3問がランダムに出る。問題文の `[ ]` がそのままこの表の見出し |
 | [quest-01](quest-01-raw-ingest/) | 「読む / 書く」「欠損」「重複」「結合」 |

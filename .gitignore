@@ -7,10 +7,6 @@ tutorial-*/work/
 # 実行のたびに作り直されるもの
 quest-*/data/
 quest-*/out/
-
-# quest-02 のデータは gen.py で作らず固定なので、これだけ管理下に戻す。
-# ディレクトリごと除外を打ち消しているので、中のファイルまで追跡される
-!quest-02-access-log-transform/data/
 quest-*/.env
 quest-*/.state
 
