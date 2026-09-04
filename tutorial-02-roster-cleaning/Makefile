@@ -1,24 +1,26 @@
-# tutorial-01 の操作を make で書いたもの。start.sh / stop.sh と並走している。
-# どちらを使ってもよい。make のほうは入力が変わったときだけビルドし直す。
+# tutorial-02 の操作。tutorial-01 の Makefile と同じ形で、ポートだけ違う。
 #
-# 普段はリポジトリのどこからでも mk tutorial-01 で叩く (~/.bash_aliases の mk 関数)。
+# tutorial-01 には start.sh / stop.sh も置いてあるが、こちらは make だけにしてある。
+# 同じことを2通りで書くと、片方だけ直して食い違うため。
+#
+# 普段はリポジトリのどこからでも mk tutorial-02 で叩く (~/.bash_aliases の mk 関数)。
 # このディレクトリで直接叩いてもよい:
 #
-#   make up       JupyterLab を起動する  (./start.sh 相当)
-#   make down     止める                 (./stop.sh 相当)
-#   make reset    ノートブックを配り直す (./start.sh --reset 相当)
+#   make up       JupyterLab を起動する
+#   make down     止める
+#   make reset    ノートブックを配り直す
 
 .DEFAULT_GOAL := help
 .DELETE_ON_ERROR:                # 途中で失敗したら中途半端な生成物を消す
 
-PORT      := 8889
+PORT      := 8890
 NOTEBOOKS := $(wildcard notebooks/*.ipynb)
 WORK_NB   := $(patsubst notebooks/%,work/%,$(NOTEBOOKS))
 
 # docker compose build の入力。1つでも新しければイメージを作り直す。
 # ビルドコンテキストがリポジトリルートなので、ルート側のファイルも入る
 BUILD_DEPS := ../pyproject.toml ../uv.lock ../.python-version \
-              ../drills/pyproject.toml ../tutorial-02-roster-cleaning/pyproject.toml \
+              ../drills/pyproject.toml ../tutorial-01-pos-pipeline/pyproject.toml \
               ../quest-01-raw-ingest/pyproject.toml \
               ../quest-02-access-log-transform/pyproject.toml \
               pyproject.toml image/Dockerfile docker-compose.yml
@@ -27,23 +29,20 @@ BUILD_DEPS := ../pyproject.toml ../uv.lock ../.python-version \
 define BANNER
 
 --------------------------------------------------------------------
-  http://localhost:8889/lab
+  http://localhost:8890/lab
 
   work/    ノートブック (git管理外。ここに書き込む)
-  /data    POSの生データ (読み取り専用)
+  /data    人事システムのエクスポート (読み取り専用)
 
-  01-ingest.ipynb から順に開いてください。
+  01-essentials.ipynb を開いてください。これ1枚で終わります。
 
-  止めるとき      mk tutorial-01-down
-  配り直すとき    mk tutorial-01-reset
+  止めるとき      mk tutorial-02-down
+  配り直すとき    mk tutorial-02-reset
 --------------------------------------------------------------------
 endef
 export BANNER
 
 # ---- ファイルのルール (make の本体) ---------------------------------
-#
-# ここに書いたものは「無ければ作る」「古ければ作り直す」で動く。
-# 毎回実行される .PHONY のタスクとは性質が違う。
 
 # 前提条件が無いので、既にあれば何もしない。
 # $$ は make ではなくシェルに $ を渡すためのエスケープ
@@ -55,15 +54,13 @@ work:
 
 # '|' の右は order-only 前提条件。mtime を比較せず「無ければ作る」だけになる。
 # 普通の前提条件にすると、git pull で配布側の notebooks/ が新しくなった瞬間に
-# work/ の自分の書き込みが消える。start.sh が
-# 「既にあるファイルを上書きしない」のと同じ挙動をこれで再現している
+# work/ の自分の書き込みが消える
 work/%.ipynb: | notebooks/%.ipynb work
 	@cp notebooks/$*.ipynb $@
 	@echo "配置: $@"
 
 # スタンプファイル。イメージそのものは make から見えないので、
-# 「いつビルドしたか」を空ファイルの mtime で代用する。
-# start.sh は毎回 --build を叩いていたが、こちらは入力が変わったときだけ走る
+# 「いつビルドしたか」を空ファイルの mtime で代用する
 .build-stamp: $(BUILD_DEPS)
 	docker compose build
 	@touch $@

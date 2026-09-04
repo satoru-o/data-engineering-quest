@@ -9,6 +9,7 @@
 ## 構成
 
 ```
+CHEATSHEET.md    pandasの早見表。実習中に開いたまま引くためのもの
 docs/            基礎論。概念だけの読み物。実習から参照される
 drills/          部品の練習。SQLとpandasの「知らないと気づかずに間違う」ところを確認する
 tutorial-NN-*/   通しの実習。1本のパイプラインを最後まで一緒に作る
@@ -16,7 +17,8 @@ quest-NN-*/      腕試し。仕様だけ渡されて自力で作る
 archive/         試したが採らなかったもの。経緯だけ残してある
 ```
 
-`docs/` 以外は docker compose でディレクトリ内が完結します。
+`docs/` と `CHEATSHEET.md` 以外は docker compose でディレクトリ内が完結します
+(quest-02 だけは例外で、Docker を使わずホストの `uv` で動きます)。
 
 ## 学習の階段
 
@@ -37,6 +39,10 @@ archive/         試したが採らなかったもの。経緯だけ残してあ
 docs/01,03 を読む
    ↓
 drills          pandas と SQL の書き方に慣れる
+   ↓
+tutorial-02     汚れた社員名簿を直す。ノートブック1枚・15分で一周する
+   ↓
+quest-02        アクセスログの下ごしらえ。チートシートから毎回3問が出る
    ↓
 tutorial-01     汚れたPOSログを日次サマリにするまでを、一緒に作る
    ↓
@@ -69,6 +75,15 @@ linux-quests の原則を引き継いだうえで、「作る」形式のため�
 - **(追加) 判定は段階的に返します。** どのチェックが通らなかったかが `out/report.txt` に出ます。作る形式では、途中経過が分からないと進めないためです
 - **(追加) 自分の答えはgit管理外です。** 次の節で説明します
 
+ただし**FLAG まわりの原則が効くのは、環境ごと立ち上げる重いクエストだけです。**
+quest-02 のように15分で終わるものには、FLAG も見張り役のプロセスも `spec/` も置いていません。
+1回走って採点して終わりで、落ちても3問ぶんの結果を全部出します。
+隠し玉は、粘る価値のある問題にだけ意味があります。
+
+一方で**「データは毎回作り直されます」は quest-02 にも効きます。** こちらは
+出題そのものもランダムで、[CHEATSHEET.md](CHEATSHEET.md) の9節から毎回3問が選ばれます。
+前回の答えを写しても通りません。
+
 ## 自分の答えはコミットされない
 
 手を動かす形式では、やったあと `work/` に自分のコードが残ります。
@@ -82,7 +97,8 @@ quest-NN-*/       skeleton/    雛形。gitで管理する
                   work/        自分のコード。git管理外。ここに書く
 ```
 
-配る側のスクリプト(`start.sh` / `setup.sh`)は、**既にあるファイルを上書きしません**。
+配る側(`start.sh` / `setup.sh`、make 化されたものは Makefile)は、
+**既にあるファイルを上書きしません**。
 何度実行しても、書きかけのものが消えることはありません。
 
 - ブランチを切る必要はありません。`git status` に出てこないので、事故になりません
@@ -90,6 +106,9 @@ quest-NN-*/       skeleton/    雛形。gitで管理する
 - どうしても残したい答えがあれば `git add -f quest-01-raw-ingest/work/ingest.py`
 
 ## 遊び方
+
+手が止まったら [CHEATSHEET.md](CHEATSHEET.md) を引きます。pandas の早見表です。
+**思い出してから書くのではなく、見ながら書いて、あとから覚えます。**
 
 ### ドリル(部品の練習)
 
@@ -107,7 +126,27 @@ cd tutorial-01-pos-pipeline && ./start.sh    # http://localhost:8889/lab
 
 `work/01-ingest.ipynb` を開いて、上から順に実行していきます。
 
+短いほう(tutorial-02)は `make` だけです。`start.sh` は置いていません。
+
+```bash
+mk tutorial-02                               # http://localhost:8890/lab
+```
+
+`work/01-essentials.ipynb` を開きます。**これ1枚で終わります。**
+
 ### クエスト(腕試し)
+
+いちばん軽いのは quest-02 です。Docker を使わず、その場で採点まで終わります。
+**[CHEATSHEET.md](CHEATSHEET.md) の9節から、毎回ちがう3問がランダムに出ます。**
+繰り返せば表を一周できるので、こちらは何度でも遊べます。
+
+```bash
+mk quest-02             # 問題を配って採点する
+mk quest-02-new         # 別の3問を引き直す
+mk quest-02-answer      # 今の3問の参考解答を見る
+```
+
+quest-01 は本格的なほうで、環境を立ち上げて仕様書から自力実装します。
 
 ```bash
 cd quest-01-raw-ingest
@@ -141,9 +180,31 @@ cat spec/orders.md     # 仕様を読む
 
 ## 収録チュートリアル
 
-**通しの実習です。** 1つの題材を、取り込みから出力まで最後まで運びます。
+**通しの実習です。** 1つの題材を、最後まで運びきります。
 考え方の説明 → セルを実行 → 小さい練習、の繰り返しで進みます。
-詳しくは [tutorial-01-pos-pipeline/README.md](tutorial-01-pos-pipeline/README.md) を参照してください。
+
+**2本あります。まとまった時間が取れないときは tutorial-02 から。**
+
+| | 題材 | 大きさ | 起動 |
+| --- | --- | --- | --- |
+| [tutorial-02](tutorial-02-roster-cleaning/) | 社員名簿クレンジング | ノートブック1枚・23セル・**15分** | `mk tutorial-02` |
+| [tutorial-01](tutorial-01-pos-pipeline/) | POS売上パイプライン | 5章・通しで作る | `mk tutorial-01` |
+
+### [tutorial-02 社員名簿クレンジング](tutorial-02-roster-cleaning/)
+
+**pandas のクレンジングだけを切り出したエッセンシャル版です。** ノートブック1枚で完結します。
+
+人事システムからエクスポートした名簿20行に、全角と空白、欠損表現の揺れ、
+Excel で落ちた先頭ゼロ、書式違いの日付、重複と訂正、部署名の表記ゆれが仕込んであります。
+これを部門別に集計できる16行にするまでを、6節・練習3問でやります。
+
+| 節 | やること |
+| --- | --- |
+| 1〜3 | 現物を見る → 表記と欠損を揃える(NFKC) → 型を決める(`zfill` / `to_datetime` / `Int64`) |
+| 4〜5 | 重複を落とす(事故と訂正は別物) → 名寄せして結合する(`validate="m:1"`) |
+| 6 | 使えない行を隔離して集計し、**手で数えた値と突き合わせる** |
+
+**出力(Parquet)と冪等な再実行は扱いません。** そこは tutorial-01 の担当です。
 
 ### [tutorial-01 POS売上パイプライン](tutorial-01-pos-pipeline/)
 
@@ -169,10 +230,11 @@ cat spec/orders.md     # 仕様を読む
 | # | テーマ | 使う力 | |
 | --- | --- | --- | --- |
 | 01 | [raw-ingest](quest-01-raw-ingest/) | 汚れた生データの取り込み(文字コード、表記ゆれ、重複、訂正、処理順) | **できた** |
-| 02 | columnar | 行指向と列指向、Parquet、圧縮、パーティショニング、述語プッシュダウン | これから |
-| 03 | idempotency | 冪等な書き込みとバックフィル(二度流しても壊れない) | これから |
-| 04 | incremental | 増分取り込み、ウォーターマーク、遅れて届くデータ | これから |
-| 05 | dimensional | スタースキーマ、代理キー、SCD Type 2 | これから |
+| 02 | [access-log-transform](quest-02-access-log-transform/) | pandas の基本操作を1行で(型、文字列、欠損、重複、集約、結合。毎回3問がランダムに出る) | **できた** |
+| 03 | columnar | 行指向と列指向、Parquet、圧縮、パーティショニング、述語プッシュダウン | これから |
+| 04 | idempotency | 冪等な書き込みとバックフィル(二度流しても壊れない) | これから |
+| 05 | incremental | 増分取り込み、ウォーターマーク、遅れて届くデータ | これから |
+| 06 | dimensional | スタースキーマ、代理キー、SCD Type 2 | これから |
 
 ### 第2部 運用 — dbt / Dagster / MinIO
 
@@ -230,7 +292,14 @@ cat spec/orders.md     # 仕様を読む
 | --- | --- | --- |
 | drills | 8888 | JupyterLab |
 | tutorial-01 | 8889 | JupyterLab |
+| tutorial-02 | 8890 | JupyterLab |
 | quest-01 | — | ポートは使いません |
+| quest-02 | — | Docker を使いません |
+
+> [!NOTE]
+> **quest-02 だけはホストに [uv](https://docs.astral.sh/uv/) が要ります。**
+> 3行埋めて15分で終わる問題に、イメージのビルド待ちを付けたくなかったためです。
+> `mk quest-02` は `uv` が無ければその場で止まって入れ方を案内します。
 
 第1部は軽めです(コンテナ2つ、メモリ1GB程度)。第3部の Kafka / Spark は数GB使います。
 
@@ -251,10 +320,14 @@ pyproject.toml                          メンバーの一覧だけ
 uv.lock                                 全メンバー分をまとめて固定する
 drills/pyproject.toml                   + jupyterlab
 tutorial-01-pos-pipeline/pyproject.toml + jupyterlab, ipykernel
+tutorial-02-roster-cleaning/pyproject.toml
+                                        + jupyterlab, ipykernel (pyarrow は要らない)
 quest-01-raw-ingest/pyproject.toml      + ipython (ノートブックは使わない)
+quest-02-access-log-transform/pyproject.toml
+                                        pandas だけ (ホストで直接動かす)
 ```
 
-`ipykernel` は `jupyterlab` の依存として勝手に入るものですが、tutorial-01 では
+`ipykernel` は `jupyterlab` の依存として勝手に入るものですが、チュートリアルでは
 **6系に留めるために明示しています。** ipykernel 7 はカーネルの内部構造が変わっており、
 VS Code の Jupyter 拡張がカーネルを ready と判定できず、セルが `pending` のまま進みません
 ([microsoft/vscode-jupyter#17228](https://github.com/microsoft/vscode-jupyter/issues/17228))。

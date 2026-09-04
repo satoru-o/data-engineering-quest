@@ -5,5 +5,7 @@
 members = [
     "drills",
     "tutorial-01-pos-pipeline",
+    "tutorial-02-roster-cleaning",
     "quest-01-raw-ingest",
+    "quest-02-access-log-transform",
 ]

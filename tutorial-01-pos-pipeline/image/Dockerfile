@@ -18,7 +18,9 @@ WORKDIR /repo
 COPY pyproject.toml uv.lock .python-version ./
 COPY drills/pyproject.toml drills/
 COPY tutorial-01-pos-pipeline/pyproject.toml tutorial-01-pos-pipeline/
+COPY tutorial-02-roster-cleaning/pyproject.toml tutorial-02-roster-cleaning/
 COPY quest-01-raw-ingest/pyproject.toml quest-01-raw-ingest/
+COPY quest-02-access-log-transform/pyproject.toml quest-02-access-log-transform/
 
 RUN uv sync --frozen --no-dev --package dequest-tutorial01
 

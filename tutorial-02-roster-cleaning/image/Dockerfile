@@ -22,7 +22,7 @@ COPY tutorial-02-roster-cleaning/pyproject.toml tutorial-02-roster-cleaning/
 COPY quest-01-raw-ingest/pyproject.toml quest-01-raw-ingest/
 COPY quest-02-access-log-transform/pyproject.toml quest-02-access-log-transform/
 
-RUN uv sync --frozen --no-dev --package dequest-drills
+RUN uv sync --frozen --no-dev --package dequest-tutorial02
 
 ENV PATH="/opt/venv/bin:$PATH"
 
@@ -34,7 +34,11 @@ ENV JUPYTER_RUNTIME_DIR=/tmp/.jupyter/runtime
 
 WORKDIR /work
 
+# disable_check_xsrf は VS Code から繋ぐために要る。
+# トークンを空にしてあるとカーネル起動のPOSTが '_xsrf missing' で 403 になり、
+# VS Code がカーネル pending のまま止まる。ローカル専用の教材用コンテナなので外してよい
 CMD ["jupyter", "lab", \
      "--ip=0.0.0.0", "--port=8888", "--no-browser", \
      "--ServerApp.token=", "--ServerApp.password=", \
+     "--ServerApp.disable_check_xsrf=True", \
      "--ServerApp.root_dir=/work"]

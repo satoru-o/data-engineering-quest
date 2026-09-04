@@ -6,7 +6,9 @@ requires-python = "==3.12.*"
 members = [
     "dequest-drills",
     "dequest-quest01",
+    "dequest-quest02",
     "dequest-tutorial01",
+    "dequest-tutorial02",
 ]
 
 [[package]]
@@ -287,6 +289,17 @@ requires-dist = [
 ]
 
 [[package]]
+name = "dequest-quest02"
+version = "0"
+source = { virtual = "quest-02-access-log-transform" }
+dependencies = [
+    { name = "pandas" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "pandas", specifier = "==2.2.3" }]
+
+[[package]]
 name = "dequest-tutorial01"
 version = "0"
 source = { virtual = "tutorial-01-pos-pipeline" }
@@ -307,6 +320,23 @@ requires-dist = [
     { name = "numpy", specifier = "==2.2.1" },
     { name = "pandas", specifier = "==2.2.3" },
     { name = "pyarrow", specifier = "==18.1.0" },
+]
+
+[[package]]
+name = "dequest-tutorial02"
+version = "0"
+source = { virtual = "tutorial-02-roster-cleaning" }
+dependencies = [
+    { name = "ipykernel" },
+    { name = "jupyterlab" },
+    { name = "pandas" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "ipykernel", specifier = "==6.31.0" },
+    { name = "jupyterlab", specifier = "==4.3.4" },
+    { name = "pandas", specifier = "==2.2.3" },
 ]
 
 [[package]]
